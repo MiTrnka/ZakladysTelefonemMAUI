@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Plugin.LocalNotification; // Přidáno kvůli lokální notifikaci
 
 namespace ZakladysTelefonemMAUI
 {
@@ -9,6 +10,7 @@ namespace ZakladysTelefonemMAUI
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseLocalNotification() // Přidáno kvůli lokální notifikaci
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

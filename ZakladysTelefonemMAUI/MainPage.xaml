@@ -56,6 +56,13 @@
                 Clicked="OnVybratZGalerieClicked"
                 HorizontalOptions="Center" />
 
+            <Button
+                x:Name="BtnSdiletObrazek"
+                Text="Sdílet obrázek"
+                Clicked="OnSdiletObrazekClicked"
+                HorizontalOptions="Center"
+                IsEnabled="False" />
+
             <Image
                 x:Name="ImgFotka"
                 Source="dotnet_bot.png"
@@ -90,6 +97,18 @@
                 Clicked="OnVytocitCisloClicked"
                 HorizontalOptions="Center"
                 IsEnabled="False" />
+
+            <Label
+                Text="Lokální Notifikace"
+                FontSize="32"
+                HorizontalOptions="Center"
+                Margin="0,20,0,0"/>
+
+            <Button
+                x:Name="BtnNotifikace"
+                Text="Notifikace"
+                Clicked="OnNotifikaceClicked"
+                HorizontalOptions="Center" />
 
         </VerticalStackLayout>
     </ScrollView>
