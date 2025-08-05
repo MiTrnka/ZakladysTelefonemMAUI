@@ -485,7 +485,9 @@ public partial class MainPage : ContentPage
 
         // DŮLEŽITÉ: Události ze senzorů často přicházejí na vedlejším vlákně (ne na hlavním UI vlákně).
         // Jakékoliv změny v uživatelském rozhraní (jako změna textu nebo rotace)
-        // se musí provádět na hlavním vlákně. K tomu slouží MainThread.BeginInvokeOnMainThread.
+        // se musí provádět na hlavním vlákně. K tomu slouží MainThread.BeginInvokeOnMainThread,
+        // který zajistí, že kód uvnitř závorek se spustí na hlavním vlákně aplikace, až bude mít čas
+        //bool jeNaHlavnimVlakne = MainThread.IsMainThread; - Takto bychom zjistili, zda jsme na hlavním vlákně.
         MainThread.BeginInvokeOnMainThread(() =>
         {
             // Nastavíme rotaci naší střelky.
