@@ -34,6 +34,33 @@ public partial class MainPage : ContentPage
     {
         base.OnAppearing();
         await NastavTlacitkoNotifikace();
+
+        // Zkontrolujeme, zda zařízení podporuje kompas.
+        if (Compass.Default.IsSupported)
+        {
+            // Přihlásíme se k odběru události 'ReadingChanged'. Naše metoda Compass_ReadingChanged
+            // se teď zavolá pokaždé, když kompas zaznamená změnu.
+            Compass.Default.ReadingChanged += Compass_ReadingChanged;
+
+            // Spustíme monitorování kompasu. Jako parametr můžeme určit rychlost snímání.
+            Compass.Default.Start(SensorSpeed.UI);
+        }
+    }
+
+    protected override void OnDisappearing()
+    {
+        // Tato metoda se zavolá vždy, když uživatel opustí stránku.
+        base.OnDisappearing();
+
+        // Pokud kompas běží, je zásadní ho zastavit, abychom šetřili baterii.
+        if (Compass.Default.IsSupported)
+        {
+            // Odhlásíme se z odběru události.
+            Compass.Default.ReadingChanged -= Compass_ReadingChanged;
+
+            // Zastavíme monitorování.
+            Compass.Default.Stop();
+        }
     }
 
     /* ==================================================================================
@@ -355,14 +382,6 @@ public partial class MainPage : ContentPage
      * - <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
      * ================================================================================== */
 
-    /* ==================================================================================
-         * LEKCE 5: Lokální Notifikace
-         *
-         * Požadovaná oprávnění v AndroidManifest.xml:
-         * - <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-         * - <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-         * ================================================================================== */
-
     /// <summary>
     /// Zkontroluje stav oprávnění pro notifikace a podle toho upraví
     /// text a chování tlačítka pro notifikace. Byl totiž problém nastavit oprávnění a vytvořit notifikaci v jednom kroku.
@@ -449,5 +468,31 @@ public partial class MainPage : ContentPage
         {
             await DisplayAlert("Chyba", $"Plánování notifikace se nezdařilo: {ex.Message}", "OK");
         }
+    }
+
+    /* ==================================================================================
+     * LEKCE 6: Kompas
+     *
+     * Požadovaná oprávnění v AndroidManifest.xml:
+     * žádná nejsou potřeba />
+     * ================================================================================== */
+
+    private void Compass_ReadingChanged(object sender, CompassChangedEventArgs e)
+    {
+        // 'e.Reading.HeadingMagneticNorth' obsahuje hodnotu ve stupních (0-360),
+        // kde 0 je magnetický sever.
+        double heading = e.Reading.HeadingMagneticNorth;
+
+        // DŮLEŽITÉ: Události ze senzorů často přicházejí na vedlejším vlákně (ne na hlavním UI vlákně).
+        // Jakékoliv změny v uživatelském rozhraní (jako změna textu nebo rotace)
+        // se musí provádět na hlavním vlákně. K tomu slouží MainThread.BeginInvokeOnMainThread.
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            // Nastavíme rotaci naší střelky.
+            LabelStrelka.Rotation = heading;
+
+            // Zobrazíme číselnou hodnotu, zaokrouhlenou na 2 desetinná místa.
+            LabelKompasHodnota.Text = $"Natočení: {heading:F2}°";
+        });
     }
 }

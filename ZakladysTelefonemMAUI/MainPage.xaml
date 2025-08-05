@@ -110,6 +110,25 @@
                 Clicked="OnNotifikaceClicked"
                 HorizontalOptions="Center" />
 
+
+            <Label
+                Text="Kompas"
+                FontSize="32"
+                HorizontalOptions="Center"
+                Margin="0,20,0,0"/>
+
+            <Label
+                x:Name="LabelStrelka"
+                Text="↑"
+                FontSize="100"
+                HorizontalOptions="Center" />
+
+            <Label
+                x:Name="LabelKompasHodnota"
+                Text="Natočení: 0°"
+                FontSize="18"
+                HorizontalOptions="Center" />
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
